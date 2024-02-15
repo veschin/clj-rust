@@ -1,0 +1,7 @@
+// lisp_expr = { ( lisp_expr_start ~ ( lisp_expr | symbol ) ~ lisp_expr_end )* }
+lisp_expr = { lisp_expr_start ~ (lisp_expr | symbol)* ~ lisp_expr_end  }
+symbol = @{ char+ }
+char = { !(lisp_expr_start | lisp_expr_end | WHITESPACE) ~ ANY }
+WHITESPACE = _{ " " }
+lisp_expr_start = { "(" }
+lisp_expr_end = { ")" }

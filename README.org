@@ -1,0 +1,10 @@
+#+title: Rust Pest parser
+
+** Motivation
+wanna learn how to make languages
+and how to programming in Rust
+
+** Goals
+- [ ] parse lisp code
+- [ ] generate rust code from lisp code
+- [ ] make repl with jit

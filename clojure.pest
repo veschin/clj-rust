@@ -1,7 +1,52 @@
-// lisp_expr = { ( lisp_expr_start ~ ( lisp_expr | symbol ) ~ lisp_expr_end )* }
-lisp_expr = { lisp_expr_start ~ (lisp_expr | symbol)* ~ lisp_expr_end  }
+root = { (
+    def |
+    fn_def |
+    symbol |
+    expression |
+    any_bracket
+)* }
+
+// NOTE: DEFINITION
+// def = { round_bracket_s ~ "def" ~ var_name ~ def_body ~ round_bracket_e }
+def = { round_bracket_s ~ "def" ~ var_name ~ def_body ~ round_bracket_e }
+def_body = { expression_or_value+ }
+
+//NOTE: FUNC
+fn_def = { round_bracket_s ~ "fn" ~ var_name? ~ fn_args ~ fn_body ~ round_bracket_e }
+fn_args = { square_bracket_s ~ symbol* ~ square_bracket_e}
+fn_body = { expression_or_value* }
+
+//NOTE: EXPRESSION
+expression_or_value = { expression | symbol }
+expression = { (round_bracket_s ~
+                (expression | value | symbol )* ~
+                round_bracket_e)+ }
+
+//NOTE: SYMBOLS
+var_name = { char+ }
 symbol = @{ char+ }
-char = { !(lisp_expr_start | lisp_expr_end | WHITESPACE) ~ ANY }
+value = @{ number+ }
+
+// NOTE: TYPES
+number = @{ ASCII_DIGIT }
+char = { !any_bracket ~ ANY }
+
+//NOTE: UTILS
 WHITESPACE = _{ " " }
-lisp_expr_start = { "(" }
-lisp_expr_end = { ")" }
+
+// NOTE: BRACKETS
+any_bracket = {
+ round_bracket_s |
+ round_bracket_e |
+ square_bracket_s |
+ square_bracket_e |
+ curly_bracket_s |
+ curly_bracket_e
+}
+
+round_bracket_s = { "(" }
+round_bracket_e = { ")" }
+square_bracket_s = { "[" }
+square_bracket_e = { "]" }
+curly_bracket_s = { "{" }
+curly_bracket_e = { "}" }
